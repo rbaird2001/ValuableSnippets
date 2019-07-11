@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    
+<!-- Headers for recording results in browser -->
+    <h2 id="myRPS"> </h2>
+    <h2 id="computerRPS"> </h2>
+    <h2 id="winner"> </h2>
+    <h2>Scoreboard</h2>
+    <h3 id="score"> </h3>
+
+
+
+    <script type="text/javascript">
+        // array arrComputerChoices holds the allowable selections
+        var arrComputerChoices = ["R", "P", "S"];
+        // Array arrScore used in function to add the winner in each game. Used for Scoreboard.
+        var arrScore = [];
+        // variables for holding strings that are populated in the function.
+        var strMyChoice;
+        var strComputerChoice;
+        var strUpperChoice;
+        var strWinner;
+        var strScore;
+        // string variables to complete the game results text
+        var strWinText = ". You win."
+        var strLoseText = ". You lose."
+        // variables that hold the elements to be used and modified by the function
+        var eleComputerRPS = document.getElementById("computerRPS");
+        var eleMyRPS = document.getElementById("myRPS");
+        var eleWinner = document.getElementById("winner");
+        var eleScore = document.getElementById("score");
+        //integer variables used in the function.
+        var intValidChoice;
+        var intYourWins;
+        var intComputerWins;
+        var intTieWins;
+        var intTotalGames;
+
+
+        // Function to execute when the key pressed is released.
+        // The function parameter, "event", is a special argument that holds
+        //   the value from the triggering event. In this case the onkeyup event.
+        document.onkeyup = function (event) {
+            // These variables are set to zero so they can be used in calculations.
+            // You cannot increment a null variable. An existing number must be there first.
+            intYourWins = 0;
+            intComputerWins = 0;
+            intTieWins = 0;
+            intTotalGames = 0;
+            // Get the value of the key pressed and add it to strMyChoice
+            strMyChoice = event.key;
+            // Convert strMyChoice to upper case and populate it to strUpperChoice.
+            // This way the case of the key doesn't matter.
+            // We always convert it to uppercase.
+            // This will be the variable used as the human's choice from now on.
+            strUpperChoice = strMyChoice.toUpperCase();
+            // Check to see if the value in strUpperChoice exists in arrComputerChoices
+            // If value exists it will return the index value from the array.
+            // If value doesn't exist, it will return -1.
+            // Return results to intValidChoice.
+            // This tells us if the key pressed was R,P, or S.
+            intValidChoice = arrComputerChoices.indexOf(strUpperChoice);
+            // If intValidChoice is 0 or greater it is a valid selection.
+            // If intValidChoice is a negative number, it isn't a valid.
+            // If not valid, we send an alert and stop the function.
+            if (intValidChoice < 0) {
+                alert("invalid choice");
+                return;
+            }
+            // Get a random selection of one of the items in arrComputerChoices.
+            // This is a well known, often used method of getting random choices.
+            // You may want to save this line of code for use in the future.
+            var strComputerChoice = arrComputerChoices[Math.floor(Math.random() * arrComputerChoices.length)];
+            // Record the human selection to the browser's page.
+            // Remember that eleMyRPS references one of the elements in the html code.
+            eleMyRPS.textContent = "You chose " + strUpperChoice;
+            // Record the computer'selection to the browser's page.
+            // Remember that eleComputerRPS references one fo the elements in the html code.
+            eleComputerRPS.textContent = "Computer chose " + strComputerChoice;
+            // If the human selected R, compare against the computer selection to determine winner.
+            // Add the winner to the strWinner variable.
+            if (strUpperChoice === "R") {
+                if (strComputerChoice === "P") {
+                    strWinner = "Computer";
+                }
+                else if (strComputerChoice === "S") {
+                    strWinner = "You";
+                }
+                else { strWinner = "Tie" }
+            }
+            // If the human selected P, compare against computer selection to determine winner.
+            // Add the winner to the strWinner variable.
+            if (strUpperChoice === "P") {
+                if (strComputerChoice === "S") {
+                    strWinner = "Computer";
+                }
+                else if (strComputerChoice === "R") {
+                    strWinner = "You";
+                }
+                else {
+                    strWinner = "Tie";
+                }
+
+            }
+            // If the human selected S, compare against computer selection to determine winner.
+            // Add the winner to the strWinner variable.
+            if (strUpperChoice === "S")
+                if (strComputerChoice === "R") {
+                    strWinner = "Computer";
+                }
+                else if (strComputerChoice === "P") {
+                    strWinner = "You";
+                }
+                else {
+                    strWinner = "Tie";
+                }
+            // based on the value in strWinner (or based on who won), create text indicating winner.
+            // Insert that text into html code.
+            if (strWinner === "Tie") {
+                eleWinner.textContent = "Tie Game";
+            }
+            else if (strWinner === "You") {
+                eleWinner.textContent = strUpperChoice + " beats " + strComputerChoice + strWinText;
+            }
+            else {
+                eleWinner.textContent = strComputerChoice + " beats " + strUpperChoice + strLoseText;
+            }
+
+            // Add the winner to the array arrScore.
+            // This will keep track of the winner of each game.
+            arrScore.push(strWinner);
+        
+            // Use a for loop to go through the array arrScore entries.
+            // For each time "You" is listed, increase intYourWins value by 1.
+            // For each time "Computer" is listed, increase intComputerWins value by 1.
+            // There are simpler ways to do this, but I wanted to practice arrays.
+            for (i = 0; i < arrScore.length; i++) {
+                if (arrScore[i] === "You") {
+                    intYourWins++;
+                }
+                else if (arrScore[i] === "Computer") {
+                    intComputerWins++
+                }
+            }
+
+            // The length of the array will indicate the total number of games played
+            //  until the browser is refreshed. This is added to intTotalGames.
+            intTotalGames = arrScore.length;
+            // The total games played minus the combined total of human and computer wins
+            //  equals the tie games.
+            // Tie games are recorded on the page in this code, but could be if desired.
+            intTieWins = intTotalGames - (intComputerWins + intYourWins);
+            // Create a string to produce the scoreboard in the browser.
+            strScore = "You: " + intYourWins + " -- " + "Computer: " + intComputerWins;
+            // Add the produced string to the browser.
+            // Remember the eleScore is a variable that references an element in the html code.
+            eleScore.textContent = strScore;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
