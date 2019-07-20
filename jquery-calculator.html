@@ -80,25 +80,38 @@
     $(document).ready(function () {
 
       // Your code here...
+      //This will tell us if the number entries are the first or second entry
       var firstNum = true;
+      //This will hold the number button value attribute which holds the integer for that button
       var btnNum = "";
-      var btnOper = ""
+      //This will hold the operator value when an operator button is clicked
+      var btnOper = "";
+      //This will hold the final result. 
+      //   It starts here, because it also get used at the start to see if a clear operation is needed.
       var intResult = null
+      //first click event. Selection of you number using number buttons
       $(".btn-primary").click(function () {
         btnNum += $(this).attr("value");
+        //check to see if this is the first or second number.
         if (firstNum) {
-          if (intResult != null) {
-            $("#first-number").text("");
-            $("#second-number").text("");
-            $("#operator").text("");
-            $("#result").text("");
-          }
+            //see if intResult has a value if so, a  display clear is initiated
+            if (intResult != null) {
+             $("#first-number").text("");
+             $("#second-number").text("");
+             $("#operator").text("");
+             $("#result").text("");
+             intResult = null
+            }
+            //enter first number in first-number <h1>
           $("#first-number").text(btnNum);
         }
+        //If not first number, then must be second number
         else {
-          $("#second-number").text(btnNum);
+            //enter second number in second-number <h1>
+            $("#second-number").text(btnNum);
         }
       });
+      //actions when an operator button is clicked
       $(".operator").click(function () {
         if (btnNum = "") {
           return;
@@ -110,10 +123,19 @@
           $("#operator").text(btnOper);
         }
       });
+      //calulate the result based on numbers and operators.
+      //this is using some hex code to translate HTML special chars
+     //   because we attempt to read the text content of the operator <h1> 
+    //    and it stores the text using html spcial character coding.
       $("#button-equal").click(function (event) {
+        //to ensure proper calculation we take the numbers from the text content
+        //    and convert them to int.
         var intFNum = parseInt($("#first-number").text());
         var intSNum = parseInt($("#second-number").text());
+        //get the text of the operator stored in the operator <h1>
         var oper = $("#operator").text();
+        //decide action based on operator.
+        //this is where hex translation of html special chars comes in.
         switch (oper) {
           case "+":
             // code block
@@ -132,16 +154,23 @@
           default:
             intResult = Math.pow(intFNum, intSNum);
         }
+        //return the result
         $("#result").text(intResult);
 
+        //clear out variables afterwards. 
+        //Display text remains as it is useful to user.
+        //intResult var is not cleared. It is held to affect a display clear
+        //   if the user decided not to use the clear button 
+        //   and just starts entering a new number.
         oper = "";
-        intFNum = 0;
-        intSNum = 0;
+        intFNum = null;
+        intSNum = null;
         btnNum = "";
         btnOper = "";
         firstNum = true;
 
       })
+      //if clear button is selected, clear everything.
       $("#button-clear").click(function () {
         oper = "";
         intFNum = null;
