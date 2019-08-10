@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>To Do App!</title>
+
+  <style>
+    #todo-item {
+      font-weight: 700;
+      font-size: 2em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Title -->
+  <h1>My To Do's!</h1>
+
+  <!-- Input Form -->
+  <form>
+    <span id="todo-item">To Do Item: <input id="to-do" type="text"><input id="add-to-do" value="Add Item"
+        type="submit"></span>
+  </form>
+
+  <hr>
+
+  <!-- To-Do List -->
+  <div id="to-dos"></div>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Script -->
+
+  <script type="text/javascript">
+
+    // Create an initial toDoCount variable
+    var arrTaskList = [];
+    // var toDoCount = arrTaskList.length;
+    var localToDoCount = localStorage.length;
+    loadArrayFromLocal()
+    
+    function loadArrayFromLocal(){
+    for (i = 0; i < localToDoCount; i++) {
+      arrTaskList.push(localStorage.getItem(i))
+    }
+  }
+
+    $("#add-to-do").on("click", function (event) {
+      event.preventDefault();
+      var toDoTask = $("#to-do").val().trim();
+      arrTaskList.push(toDoTask);
+      renderToDo()
+    });
+
+    // When a user clicks a check box then delete the specific content
+    // (NOTE: Pay attention to the unusual syntax here for the click event.
+    // Because we are creating click events on "dynamic" content, we can't just use the usual "on" "click" syntax.)
+    $(document.body).on("click", ".checkbox", function () {
+      event.preventDefault();
+      // Get the number of the button from its data attribute and hold in a variable called  toDoNumber.
+      var toDoNumber = $(this).attr("data-to-do");
+
+      // Select and Remove the specific <p> element that previously held the to do item number.
+      $("#item-" + toDoNumber).remove();
+      localStorage.removeItem(toDoNumber);
+      arrTaskList.splice(toDoNumber,1);
+      renderToDo;
+    });
+
+    function renderToDo() {
+      $("#to-dos").empty();
+      localStorage.clear
+      for (i = 0; i < arrTaskList.length; i++) {
+        localStorage.setItem(i, arrTaskList[i]);
+        var toDoCount = i
+        var toDoItem = $("<p>");
+        var toDoText = arrTaskList[i]
+        toDoItem.attr("id","item-" + toDoCount);
+        toDoItem.text(toDoText);
+        var toDoClose = $("<button>");
+        toDoClose.attr("data-to-do", toDoCount);
+        toDoClose.addClass("checkbox");
+        toDoClose.text("✓");
+        toDoItem = toDoItem.prepend(toDoClose);
+        $("#to-dos").append(toDoItem);
+        $("#to-do").val("");
+      }
+    }
+    renderToDo();
+  </script>
+
+</body>
+
+</html>
