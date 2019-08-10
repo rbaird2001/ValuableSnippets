@@ -153,11 +153,11 @@
             }
 
             // The length of the array will indicate the total number of games played
-            //  until the browser is refreshed. This is added to intTotalGames.
+            //   until the browser is refreshed. This is added to intTotalGames.
             intTotalGames = arrScore.length;
             // The total games played minus the combined total of human and computer wins
-            //  equals the tie games.
-            // Tie games are recorded on the page in this code, but could be if desired.
+            //   equals the tie games.
+            // Tie games aren't recorded on the page in this code, but could be if desired.
             intTieWins = intTotalGames - (intComputerWins + intYourWins);
             // Create a string to produce the scoreboard in the browser.
             strScore = "You: " + intYourWins + " -- " + "Computer: " + intComputerWins;
