@@ -39,54 +39,66 @@
 
         //create object to hold local storage during proccessing
         var objTodoList = { queue: [] };
-        renderToDo();
+        //renderToDo();
 
         //parse localStorage into JSON and add to objTodoList
-        function fromTodoLocal(){
-            objTodoList = JSON.parse(localStorage.getItem("todo"));
+        function fromTodoLocal() {
+            if (localStorage.getItem("todo")) {
+                objTodoList = JSON.parse(localStorage.getItem("todo"));
+                return true;
+            }
+            else {
+                return false;
+            }
         }
-        
+
         //send objTodoList to localStorage as string
         function toTodoLocal() {
             localStorage.setItem("todo", JSON.stringify(objTodoList));
         }
-        
+
         //create list items and check boxes in html.
         function renderToDo() {
-            fromTodoLocal()
-            let q = objTodoList.queue
-            $("#to-dos").empty();
-            for (i = 0; i < q.length; i++) {
-                let toDoItem = $("<p>");
-                let toDoClose = $("<button>");
-                let j = q[i].todoID;
-                let k = q[i].todoName;
-                let l = "item-" + j;
-                toDoItem.attr({
-                    "id": l,
-                    "data-to-do": j
-                })
-                    .text(k);
-                toDoClose.addClass("checkbox");
-                toDoClose.attr("data-to-do",j)
-                toDoClose.text("✓");
-                toDoItem = toDoItem.prepend(toDoClose);
-                $("#to-dos").append(toDoItem);
-                $("#to-do").val("");
+            let l = fromTodoLocal()
+            if (l) {
+                let q = objTodoList.queue
+                $("#to-dos").empty();
+                for (i = 0; i < q.length; i++) {
+                    let toDoItem = $("<p>");
+                    let toDoClose = $("<button>");
+                    let j = q[i].todoID;
+                    let k = q[i].todoName;
+                    let l = "item-" + j;
+                    toDoItem.attr({
+                        "id": l,
+                        "data-to-do": j
+                    })
+                        .text(k);
+                    toDoClose.addClass("checkbox");
+                    toDoClose.attr("data-to-do", j)
+                    toDoClose.text("✓");
+                    toDoItem = toDoItem.prepend(toDoClose);
+                    $("#to-dos").append(toDoItem);
+                    $("#to-do").val("");
+                }
             }
         }
         //add new todo when button clicked
         $("#add-to-do").on("click", function (event) {
             event.preventDefault();
-            fromTodoLocal();
-            q = objTodoList.queue;
+            let l = fromTodoLocal();
             let newTodo = $("#to-do").val().trim();
             let newId = Math.floor(Math.random() * (100 - 1 + 1));
-            q.push(
-                {
+            if(l){
+              let q = objTodoList.queue.push(
+                  {
+                      todoID: newId, todoName: newTodo
+                  });
+            } else{
+                objTodoList.queue = [{
                     todoID: newId, todoName: newTodo
-                });
-            objTodoList.queue = q
+                }];
+            }
             toTodoLocal();
             renderToDo();
         });
@@ -97,11 +109,11 @@
         $(document.body).on("click", ".checkbox", function () {
             event.preventDefault();
             fromTodoLocal();
-            q=objTodoList.queue;
+            q = objTodoList.queue;
             let t = parseInt($(this).attr("data-to-do"));
-            for(i=0;i<q.length;i++){
-                if(q[i].todoID === t){
-                    q.splice(i,1)
+            for (i = 0; i < q.length; i++) {
+                if (q[i].todoID === t) {
+                    q.splice(i, 1)
                     objTodoList.queue = q
                     toTodoLocal();
                     renderToDo();
@@ -109,22 +121,6 @@
             };
         });
 
-
-
-
-// localStorage.setItem(i, arrTaskList[i]);
-// var toDoCount = i
-// var toDoItem = $("<p>");
-// var toDoText = arrTaskList[i]
-// toDoItem.attr("id","item-" + toDoCount);
-// toDoItem.text(toDoText);
-// var toDoClose = $("<button>");
- //toDoClose.attr("data-to-do", toDoCount);
- //toDoClose.addClass("checkbox");
-// toDoClose.text("✓");
-// toDoItem = toDoItem.prepend(toDoClose);
-// $("#to-dos").append(toDoItem);
-// $("#to-do").val("");
     </script>
 
 </body>
